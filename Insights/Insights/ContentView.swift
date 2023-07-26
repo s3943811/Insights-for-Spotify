@@ -20,39 +20,57 @@ struct ContentView: View {
     
     @State private var isAuthenticated = AuthenticationState.none
     
+    @State var logTxt = "Login"
+    @State var logImage = "person.crop.circle.badge.checkmark"
+    
     func handleURL(_ url: URL) {
         guard url.scheme == spotify.redirectURL?.scheme else {
             print("error")
             return
         }
         print(url)
-        spotify.spotify.authorizationManager.requestAccessAndRefreshTokens(redirectURIWithQuery: url)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                    case .finished:
-                        print("successfully authorized")
-                        isAuthenticated = .authenticated
-                    case .failure(let error):
-                        if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
-                            print("The user denied the authorization request")
-                            isAuthenticated = .error
-                        }
-                        else {
-                            print("couldn't authorize application: \(error)")
-                        }
-                }
-            })
-            .store(in: &cancellables)
-        print(spotify.authenticationState)
+        spotify.spotify.authorizationManager.requestAccessAndRefreshTokens(
+            redirectURIWithQuery: url,
+            codeVerifier: spotify.codeVerifier,
+            state: spotify.state)
+        .sink(receiveCompletion: { completion in
+            switch completion {
+                case .finished:
+                    print("successfully authorized")
+                    isAuthenticated = .authenticated
+                case .failure(let error):
+                    if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
+                        print("The user denied the authorization request")
+                        isAuthenticated = .error
+                    }
+                    else {
+                        print("couldn't authorize application: \(error)")
+                    }
+            }
+        })
+        .store(in: &cancellables)
     }
+    
     var body: some View {
         ZStack {
             LoginView()
                 .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
                 .animation(.easeInOut, value: spotify.authenticationState)
 
-            Text("hello")
+            Label(logTxt, systemImage: logImage)
                 .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                .onHover { hover in
+                    withAnimation {
+                        if hover {
+                            logTxt = "Logout"
+                            logImage = "person.crop.circle.badge.minus"
+                        }
+                        else {
+                            logTxt = "Login"
+                            logImage = "person.crop.circle.badge.checkmark"
+                        }
+                    }
+                }
         }
         .onOpenURL(perform: handleURL(_:))
         .environmentObject(spotify)

@@ -12,19 +12,31 @@ import SpotifyWebAPI
 class envSpotify: ObservableObject {
     let redirectURL = URL(string: "insights://login-callback")
     
-    let spotify = SpotifyAPI(authorizationManager:
-                                AuthorizationCodeFlowManager(
-                                    clientId: ProcessInfo.processInfo.environment["CLIENT_ID"]!,
-                                    clientSecret: ProcessInfo.processInfo.environment["CLIENT_SECRET"]!))
     enum AuthenticationState  {
         case none, working, authenticated, error
     }
     @Published var authenticationState = AuthenticationState.none
     
+    let spotify = SpotifyAPI(
+        authorizationManager: AuthorizationCodeFlowPKCEManager(
+            clientId: ProcessInfo.processInfo.environment["CLIENT_ID"]!
+        )
+    )
+    let codeVerifier: String
+    let codeChallenge: String
+    let state: String
+    
+    init() {
+        self.codeVerifier = String.randomURLSafe(length: 128)
+        self.codeChallenge = String.makeCodeChallenge(codeVerifier: self.codeVerifier)
+        self.state = String.randomURLSafe(length: 128)
+    }
+    
     func generateAuthURL() -> URL {
         let authorizationURL = spotify.authorizationManager.makeAuthorizationURL(
             redirectURI: redirectURL!,
-            showDialog: true,
+            codeChallenge: codeChallenge,
+            state: state,
             scopes: [
                 .playlistModifyPrivate,
                 .playlistModifyPublic
