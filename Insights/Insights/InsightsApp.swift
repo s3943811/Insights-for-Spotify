@@ -12,6 +12,7 @@ struct InsightsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .handlesExternalEvents(preferring: ["pause"], allowing: ["*"])
         }
     }
 }

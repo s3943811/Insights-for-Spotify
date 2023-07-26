@@ -12,6 +12,8 @@
 		D4FF14062A6FC4AF00151567 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4FF14052A6FC4AF00151567 /* Assets.xcassets */; };
 		D4FF14092A6FC4AF00151567 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4FF14082A6FC4AF00151567 /* Preview Assets.xcassets */; };
 		D4FF14132A6FC5DF00151567 /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = D4FF14122A6FC5DF00151567 /* SpotifyAPI */; };
+		D4FF14172A6FC86A00151567 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FF14162A6FC86A00151567 /* LoginView.swift */; };
+		D4FF14192A6FD3D300151567 /* envSpotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FF14182A6FD3D300151567 /* envSpotify.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		D4FF14082A6FC4AF00151567 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D4FF140A2A6FC4AF00151567 /* Insights.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Insights.entitlements; sourceTree = "<group>"; };
 		D4FF14102A6FC57C00151567 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D4FF14162A6FC86A00151567 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		D4FF14182A6FD3D300151567 /* envSpotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = envSpotify.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,9 +62,11 @@
 				D4FF14102A6FC57C00151567 /* Info.plist */,
 				D4FF14012A6FC4AE00151567 /* InsightsApp.swift */,
 				D4FF14032A6FC4AE00151567 /* ContentView.swift */,
+				D4FF14182A6FD3D300151567 /* envSpotify.swift */,
 				D4FF14052A6FC4AF00151567 /* Assets.xcassets */,
 				D4FF140A2A6FC4AF00151567 /* Insights.entitlements */,
 				D4FF14072A6FC4AF00151567 /* Preview Content */,
+				D4FF14162A6FC86A00151567 /* LoginView.swift */,
 			);
 			path = Insights;
 			sourceTree = "<group>";
@@ -149,8 +155,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4FF14172A6FC86A00151567 /* LoginView.swift in Sources */,
 				D4FF14042A6FC4AE00151567 /* ContentView.swift in Sources */,
 				D4FF14022A6FC4AE00151567 /* InsightsApp.swift in Sources */,
+				D4FF14192A6FD3D300151567 /* envSpotify.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
