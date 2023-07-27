@@ -13,10 +13,12 @@ struct LoginView: View {
     
     var body: some View {
         VStack {
+            Spacer()
             Text("Insights for Spotify")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
+            Spacer()
             Text("A SwiftUI MacOS project to show users their top spotify data, playlists and provide some recommendations. If you choose to accept the permissions and ensure you reopen the link in the app. Afterwards you may close the window in your browser asking for permissions.")
                 .fontWeight(.medium)
                 .padding([.leading, .trailing, .bottom])
@@ -26,18 +28,13 @@ struct LoginView: View {
                 .fontWeight(.thin)
                 .padding([.leading, .trailing, .bottom])
                 .multilineTextAlignment(.center)
-            
-            Text("Developed by Maximus Dionyssopoulos")
-                .font(.body)
-                .fontWeight(.thin)
-                .padding(3)
             Button {
                 spotify.authenticationState = .working
                 openURL(spotify.generateAuthURL())
             
             } label: {
                 Label("Login to Spotify", systemImage: "person.badge.plus")
-                    .padding(2)
+                    .padding(5)
                     .font(.callout.weight(.regular))
             }
             .disabled(spotify.authenticationState == .working ? true : false)
@@ -47,8 +44,13 @@ struct LoginView: View {
             .background(.green)
             .clipShape(Capsule())
             .padding(.top)
+            Spacer()
+            Text("Developed by Maximus Dionyssopoulos")
+                .font(.body)
+                .fontWeight(.thin)
+                .padding(3)
         }
-        .frame(minWidth: 500, minHeight: 500)
+//        .frame(minWidth: 500, minHeight: 500)
     }
 }
 
