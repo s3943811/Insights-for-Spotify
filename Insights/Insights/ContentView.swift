@@ -11,8 +11,10 @@ import SpotifyWebAPI
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL
-    @State var cancellables: [AnyCancellable] = []
-    @ObservedObject var spotify = envSpotify()
+    @EnvironmentObject var spotify: envSpotify
+    
+    @State var logTxt = "Login"
+    @State var logImage = "person.crop.circle.badge.checkmark"
     
     enum AuthenticationState  {
         case none, working, authenticated, error
@@ -20,8 +22,70 @@ struct ContentView: View {
     
     @State private var isAuthenticated = AuthenticationState.none
     
-    @State var logTxt = "Login"
-    @State var logImage = "person.crop.circle.badge.checkmark"
+    @State var userDetail = User(id: "")
+
+    
+    var body: some View {
+        ZStack {
+            LoginView()
+                .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
+                .animation(.easeInOut, value: spotify.authenticationState)
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("Hello, \(userDetail.name).")
+                        .font(.largeTitle)
+                        .fixedSize()
+                    Button {
+                        logout()
+                    } label: {
+                        Label("Logout", systemImage: "person.badge.minus")
+                    }
+//                        .padding(.all)
+                    .buttonStyle(.borderless)
+                }
+                Spacer()
+                TopDataView()
+            }
+            .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+        }
+        .onAppear {
+            if spotify.api.authorizationManager.isAuthorized() {
+                isAuthenticated = .authenticated
+            }
+        }
+        .onOpenURL(perform: handleURL(_:))
+        
+        .onChange(of: isAuthenticated) { state in
+            print(state)
+            if state == .authenticated {
+                spotify.authenticationState = .authenticated
+                setUserDetails()
+                spotify.viewState = .top
+            }
+            else {
+                spotify.authenticationState = .error
+            }
+        }
+    }
+    
+    func setUserDetails() {
+        spotify.api.currentUserProfile()
+            .sink(
+                receiveCompletion: { completion in
+                    print(completion)
+                },
+                receiveValue: { results in
+                    userDetail.displayName = results.displayName
+                    userDetail.id = results.id
+                }
+            )
+            .store(in: &spotify.cancellables)
+    }
+    
+    func logout() {
+        spotify.api.authorizationManager.deauthorize()
+    }
     
     func handleURL(_ url: URL) {
         guard url.scheme == spotify.redirectURL?.scheme else {
@@ -29,7 +93,7 @@ struct ContentView: View {
             return
         }
         print(url)
-        spotify.spotify.authorizationManager.requestAccessAndRefreshTokens(
+        spotify.api.authorizationManager.requestAccessAndRefreshTokens(
             redirectURIWithQuery: url,
             codeVerifier: spotify.codeVerifier,
             state: spotify.state)
@@ -48,41 +112,15 @@ struct ContentView: View {
                     }
             }
         })
-        .store(in: &cancellables)
+        .store(in: &spotify.cancellables)
     }
-    
-    var body: some View {
-        ZStack {
-            LoginView()
-                .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
-                .animation(.easeInOut, value: spotify.authenticationState)
+}
 
-            Label(logTxt, systemImage: logImage)
-                .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-                .onHover { hover in
-                    withAnimation {
-                        if hover {
-                            logTxt = "Logout"
-                            logImage = "person.crop.circle.badge.minus"
-                        }
-                        else {
-                            logTxt = "Login"
-                            logImage = "person.crop.circle.badge.checkmark"
-                        }
-                    }
-                }
-        }
-        .onOpenURL(perform: handleURL(_:))
-        .environmentObject(spotify)
-        .onChange(of: isAuthenticated) { state in
-            print(state)
-            if state == .authenticated {
-                spotify.authenticationState = .authenticated
-            }
-            else {
-                spotify.authenticationState = .error
-            }
-        }
+struct User {
+    var id: String
+    var displayName: String?
+    var name: String {
+        self.displayName == nil ? self.id : self.displayName!
     }
 }
 
