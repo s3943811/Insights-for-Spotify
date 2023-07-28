@@ -23,6 +23,8 @@ struct ContentView: View {
     @State private var isAuthenticated = AuthenticationState.none
     
     @State var userDetail = User(id: "")
+    
+    @State var columnVisibility = NavigationSplitViewVisibility.detailOnly
 
     
     var body: some View {
@@ -30,42 +32,48 @@ struct ContentView: View {
             LoginView()
                 .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
                 .animation(.easeInOut, value: spotify.authenticationState)
-            VStack {
-                HStack {
-                    Spacer()
-                    Text("Hello, \(userDetail.name).")
-                        .font(.largeTitle)
-                        .fixedSize()
-                    Button {
-                        logout()
-                    } label: {
-                        Label("Logout", systemImage: "person.badge.minus")
+            NavigationSplitView(columnVisibility: $columnVisibility) {
+                
+            } detail: {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Text("Hello, \(userDetail.name).")
+                            .font(.largeTitle)
+                            .fixedSize()
+                        Button {
+                            logout()
+                        } label: {
+                            Label("Logout", systemImage: "person.badge.minus")
+                        }
+                        //                        .padding(.all)
+                        .buttonStyle(.borderless)
                     }
-//                        .padding(.all)
-                    .buttonStyle(.borderless)
+                    Spacer()
+                    TopDataView()
                 }
-                Spacer()
-                TopDataView()
+            }
+            .onAppear {
+                if spotify.api.authorizationManager.isAuthorized() {
+                    isAuthenticated = .authenticated
+                    columnVisibility = .all
+                }
+            }
+            .onOpenURL(perform: handleURL(_:))
+            
+            .onChange(of: isAuthenticated) { state in
+                print(state)
+                if state == .authenticated {
+                    spotify.authenticationState = .authenticated
+                    setUserDetails()
+                    spotify.viewState = .top
+                }
+                else {
+                    spotify.authenticationState = .error
+                }
             }
             .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-        }
-        .onAppear {
-            if spotify.api.authorizationManager.isAuthorized() {
-                isAuthenticated = .authenticated
-            }
-        }
-        .onOpenURL(perform: handleURL(_:))
-        
-        .onChange(of: isAuthenticated) { state in
-            print(state)
-            if state == .authenticated {
-                spotify.authenticationState = .authenticated
-                setUserDetails()
-                spotify.viewState = .top
-            }
-            else {
-                spotify.authenticationState = .error
-            }
+            .toolbar(spotify.authenticationState == .authenticated ? .visible : .hidden, for: .windowToolbar)
         }
     }
     
