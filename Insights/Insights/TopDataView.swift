@@ -20,8 +20,15 @@ struct TopDataView: View {
     @State var artists = [Artist]()
     @State var songs = [Track]()
     
-    func getTopArists(offset: Int = 0, limit: Int = 10) {
-        spotify.api.currentUserTopArtists(offset: offset, limit: limit)
+    @State var limit = 10
+    
+    let limits = [5,10,15,20,25,30,35,40,45,50]
+    let timeRanges: [TimeRange] = [.shortTerm, .mediumTerm, .longTerm]
+    
+    @State var timeRange = TimeRange.mediumTerm
+    
+    func getTopArists(offset: Int = 0, limit: Int = 10, timeRange: TimeRange = .mediumTerm) {
+        spotify.api.currentUserTopArtists(timeRange ,offset: offset, limit: limit)
             .sink(
                 receiveCompletion: { completion in
                     print(completion)
@@ -32,8 +39,8 @@ struct TopDataView: View {
             )
             .store(in: &spotify.cancellables)
     }
-    func getTopSongs(offset: Int = 0, limit: Int = 10) {
-        spotify.api.currentUserTopTracks(offset: offset, limit: limit)
+    func getTopSongs(offset: Int = 0, limit: Int = 10, timeRange: TimeRange = .mediumTerm) {
+        spotify.api.currentUserTopTracks(timeRange, offset: offset, limit: limit)
             .sink(
                 receiveCompletion: { completion in
                     print(completion)
@@ -48,15 +55,24 @@ struct TopDataView: View {
     var body: some View {
         VStack{
             HStack {
-                Text("Your top 10")
+                Text("Your top")
                     .font(.largeTitle)
                     .padding(.leading)
+                Picker(selection: $limit, label: EmptyView()) {
+                    ForEach(limits, id: \.self) { limit in
+                        Text(String(limit))
+                            .font(.title2)
+                    }
+                }
+                .frame(width:65, height: 50)
+//                .scaledToFit()
+                
                 Button("Artist"){
                     withAnimation {
                         if dataState != .artist {
                             dataState = .artist
                             if artists.isEmpty {
-                                getTopArists()
+                                getTopArists(limit: limit, timeRange: timeRange)
                             }
                         }
                     }
@@ -73,7 +89,7 @@ struct TopDataView: View {
                         if dataState != .songs {
                             dataState = .songs
                             if songs.isEmpty {
-                                getTopSongs()
+                                getTopSongs(limit: limit, timeRange: timeRange)
                             }
                         }
                     }
@@ -82,7 +98,24 @@ struct TopDataView: View {
                 .buttonStyle(.borderless)
                 .font(.largeTitle)
                 .foregroundColor(dataState == .songs ? .white : .gray)
-                
+                Picker(selection: $timeRange) {
+                    ForEach(timeRanges, id: \.self) { range in
+                        if range == .mediumTerm {
+                            Text("Last 6 months")
+                        }
+                        else if range == .shortTerm {
+                            Text("Last 4 weeks")
+                        }
+                        else {
+                            Text("A long time")
+                        }
+                    }
+                    
+                } label: {
+                    Text("For the previous:")
+                        .font(.largeTitle)
+                }
+                .frame(width:300)
                 Spacer()
             }
             ZStack {
@@ -108,11 +141,24 @@ struct TopDataView: View {
                 .padding()
                 .opacity(dataState == .songs ? 1.0 : 0)
             }
+            .onChange(of: limit) { newLimit in
+                print(limit)
+                    getTopSongs(limit: limit, timeRange: timeRange)
+                    getTopArists(limit: limit, timeRange: timeRange)
+            }
+            .onChange(of: timeRange) { range in
+//                if dataState == .songs {
+                    getTopSongs(limit: limit, timeRange: timeRange)
+//                }
+//                else {
+                    getTopArists(limit: limit, timeRange: timeRange)
+//                }
+            }
         }
         .onChange(of: spotify.viewState) { state in
             print(state)
             if state == .top {
-                getTopArists()
+                getTopArists(limit: limit, timeRange: timeRange)
             }
         }
     }
