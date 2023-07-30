@@ -20,7 +20,7 @@ struct ArtistView: View {
             print("Artist: \(artist.name)")
         } label: {
             ZStack(alignment: .bottom) {
-                let image = artist.images![0].url
+                let image = artist.images![1].url
                 AsyncImage(url: image) { phase in
                     switch phase {
                     case .success(let image):
@@ -33,7 +33,7 @@ struct ArtistView: View {
                         ProgressView()
                     }
                 }
-                .frame(width: 150, height: 150)
+                .frame(width: 130, height: 130)
                 .scaleEffect(isHovering ? 1.2 : 1.0)
                 
                 VStack {
@@ -41,8 +41,8 @@ struct ArtistView: View {
                         .lineLimit(2)
                         .font(.headline)
                 }
-                .padding(5)
-                .frame(width: 150)
+                .padding(3)
+                .frame(width: 130)
                 .background(.regularMaterial)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))

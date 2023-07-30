@@ -11,6 +11,8 @@ struct LoginView: View {
     @EnvironmentObject var spotify: envSpotify
     @Environment(\.openURL) var openURL
     
+    @State var isHovering = false
+    
     var body: some View {
         VStack {
             Spacer()
@@ -18,7 +20,6 @@ struct LoginView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding()
-            Spacer()
             Text("A SwiftUI MacOS project to show users their top spotify data, playlists and provide some recommendations. If you choose to accept the permissions and ensure you reopen the link in the app. Afterwards you may close the window in your browser asking for permissions.")
                 .fontWeight(.medium)
                 .padding([.leading, .trailing, .bottom])
@@ -35,7 +36,7 @@ struct LoginView: View {
             } label: {
                 Label("Login to Spotify", systemImage: "person.badge.plus")
                     .padding(5)
-                    .font(.callout.weight(.regular))
+                    .font(.title3)
             }
             .disabled(spotify.authenticationState == .working ? true : false)
             .buttonStyle(.plain)
@@ -44,6 +45,12 @@ struct LoginView: View {
             .background(.green)
             .clipShape(Capsule())
             .padding(.top)
+            .scaleEffect(isHovering ? 1.2 : 1.0)
+            .onHover { hovering in
+                withAnimation {
+                    isHovering = hovering
+                }
+            }
             Spacer()
             Text("Developed by Maximus Dionyssopoulos")
                 .font(.body)

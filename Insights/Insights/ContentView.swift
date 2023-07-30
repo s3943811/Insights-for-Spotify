@@ -23,58 +23,48 @@ struct ContentView: View {
     @State private var isAuthenticated = AuthenticationState.none
     
     @State var userDetail = User(id: "")
-    
-    @State var columnVisibility = NavigationSplitViewVisibility.detailOnly
 
     
     var body: some View {
-        ZStack {
-            LoginView()
-                .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
-                .animation(.easeInOut, value: spotify.authenticationState)
-            NavigationSplitView(columnVisibility: $columnVisibility) {
-                
-            } detail: {
-                VStack {
-                    HStack {
-                        Spacer()
-                        Text("Hello, \(userDetail.name).")
-                            .font(.largeTitle)
-                            .fixedSize()
-                        Button {
-                            logout()
-                        } label: {
-                            Label("Logout", systemImage: "person.badge.minus")
-                        }
-                        //                        .padding(.all)
-                        .buttonStyle(.borderless)
-                    }
-                    Spacer()
-                    TopDataView()
-                }
-            }
-            .onAppear {
-                if spotify.api.authorizationManager.isAuthorized() {
-                    isAuthenticated = .authenticated
-                    columnVisibility = .all
-                }
-            }
-            .onOpenURL(perform: handleURL(_:))
+        NavigationSplitView() {
             
-            .onChange(of: isAuthenticated) { state in
-                print(state)
-                if state == .authenticated {
-                    spotify.authenticationState = .authenticated
-                    setUserDetails()
-                    spotify.viewState = .top
-                }
-                else {
-                    spotify.authenticationState = .error
-                }
+        } detail: {
+            ZStack {
+                LoginView()
+                    .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
+                    .animation(.easeInOut, value: spotify.authenticationState)
+                UserTopView()
+                    .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
             }
-            .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-            .toolbar(spotify.authenticationState == .authenticated ? .visible : .hidden, for: .windowToolbar)
         }
+        .toolbar {
+            ToolbarItem {
+                Button("Logout") {
+                    logout()
+                }
+                .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                .animation(.default, value: spotify.authenticationState)
+            }
+        }
+        .onAppear {
+            if spotify.api.authorizationManager.isAuthorized() {
+                isAuthenticated = .authenticated
+            }
+        }
+        .onOpenURL(perform: handleURL(_:))
+        
+        .onChange(of: isAuthenticated) { state in
+            print(state)
+            if state == .authenticated {
+                spotify.authenticationState = .authenticated
+                setUserDetails()
+                spotify.viewState = .top
+            }
+            else {
+                spotify.authenticationState = .error
+            }
+        }
+//            .toolbar(spotify.authenticationState == .authenticated ? .visible : .hidden, for: .windowToolbar)
     }
     
     func setUserDetails() {

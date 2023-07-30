@@ -17,7 +17,7 @@ struct TrackView: View {
             print("Song: \(song.name)")
         } label: {
             ZStack(alignment: .bottom) {
-                let image = song.album!.images![0].url
+                let image = song.album!.images![1].url
                 AsyncImage(url: image) { phase in
                     switch phase {
                     case .success(let image):
@@ -30,7 +30,7 @@ struct TrackView: View {
                         ProgressView()
                     }
                 }
-                .frame(width: 150, height: 150)
+                .frame(width: 130, height: 130)
                 .scaleEffect(isHovering ? 1.2 : 1.0)
                 
                 VStack {
@@ -43,8 +43,8 @@ struct TrackView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                .padding(5)
-                .frame(width: 150)
+                .padding(3)
+                .frame(width: 130)
                 .background(.regularMaterial)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -57,6 +57,7 @@ struct TrackView: View {
                 isHovering = hovering
             }
         }
+
     }
 }
 
