@@ -13,7 +13,7 @@ enum DataChoice {
 }
 
 enum ViewState {
-    case login, top, recommendations
+    case login, top, recommendations, home
 }
 
 struct TrackAndArtist {

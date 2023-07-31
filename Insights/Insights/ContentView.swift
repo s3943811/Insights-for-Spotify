@@ -12,26 +12,16 @@ import SpotifyWebAPI
 struct ContentView: View {
     @Environment(\.openURL) var openURL
     @EnvironmentObject var spotify: envSpotify
-    
-    @State var logTxt = "Login"
-    @State var logImage = "person.crop.circle.badge.checkmark"
-    
-    
-    let menus = [MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
-    
-
     @State var viewState = ViewState.login
+    @State private var isAuthenticated = AuthenticationState.none
+    @State var trackAndArtist: TrackAndArtist = TrackAndArtist(tracks: [.time], artists: [.crumb])
+    @State var currentUser: SpotifyUser = .sampleCurrentUserProfile
     
+    let menus = [MenuItem(id: .home, name: "Home", image: "music.note.house.fill"), MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
     enum AuthenticationState  {
         case none, working, authenticated, error
     }
-    
-    @State private var isAuthenticated = AuthenticationState.none
-    
-    @State var userDetail = User(id: "")
-    @State var trackAndArtist: TrackAndArtist = TrackAndArtist(tracks: [.time], artists: [.crumb])
 
-    
     var body: some View {
         NavigationSplitView() {
             if viewState != .login {
@@ -49,8 +39,11 @@ struct ContentView: View {
                     UserTopView(viewState: $viewState)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 } else if viewState == .recommendations {
-                    RecommendationsView(trackAndArtist: $trackAndArtist)
+                    RecommendationsView(currentUser: $currentUser, trackAndArtist: $trackAndArtist)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                } else if viewState == .home {
+                    HomeView(currentUser: $currentUser, trackAndArtist: $trackAndArtist, viewState: $viewState)
+                    
                 }
             }
         }
@@ -78,24 +71,11 @@ struct ContentView: View {
             if state == .authenticated {
                 spotify.authenticationState = .authenticated
 //                setUserDetails()
+                getCurrentUser()
                 getTop5()
-                viewState = .top
+                viewState = .home
             }
         }
-    }
-    
-    func setUserDetails() {
-        spotify.api.currentUserProfile()
-            .sink(
-                receiveCompletion: { completion in
-                    print(completion)
-                },
-                receiveValue: { results in
-                    userDetail.displayName = results.displayName
-                    userDetail.id = results.id
-                }
-            )
-            .store(in: &spotify.cancellables)
     }
     
     func logout() {
@@ -132,6 +112,19 @@ struct ContentView: View {
         .store(in: &spotify.cancellables)
     }
     
+    func getCurrentUser() {
+        spotify.api.currentUserProfile()
+            .sink(
+                receiveCompletion: { completion in
+                    print(completion)
+                },
+                receiveValue: { results in
+                    currentUser = results
+                }
+            )
+            .store(in: &spotify.cancellables)
+    }
+    
     func getTop5() {
         spotify.api.currentUserTopArtists(.mediumTerm, offset: 0, limit: 5)
             .receive(on: RunLoop.main)
@@ -158,14 +151,6 @@ struct ContentView: View {
     }
 }
 
-struct User {
-    var id: String
-    var displayName: String?
-    var name: String {
-        self.displayName == nil ? self.id : self.displayName!
-    }
-}
-
 struct MenuItem: Identifiable, Hashable {
     var id: ViewState
     var name: String
@@ -173,7 +158,8 @@ struct MenuItem: Identifiable, Hashable {
 }
 
 struct ContentView_Previews: PreviewProvider {
+    static let exampleUser: SpotifyUser = .sampleCurrentUserProfile
     static var previews: some View {
-        ContentView()
+        ContentView(currentUser: exampleUser)
     }
 }
