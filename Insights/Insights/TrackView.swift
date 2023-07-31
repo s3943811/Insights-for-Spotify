@@ -10,14 +10,19 @@ import SpotifyWebAPI
 import SpotifyExampleContent
 
 struct TrackView: View {
+    @Environment(\.openURL) var openURL
+    
     @State private var isHovering = false
     var song: Track
     var body: some View {
         Button {
             print("Song: \(song.name)")
+            if let url = song.externalURLs?["spotify"] {
+                openURL(url)
+            }
         } label: {
             ZStack(alignment: .bottom) {
-                let image = song.album!.images![1].url
+                let image = song.album?.images?[1].url
                 AsyncImage(url: image) { phase in
                     switch phase {
                     case .success(let image):

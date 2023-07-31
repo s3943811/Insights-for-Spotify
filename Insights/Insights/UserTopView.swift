@@ -59,35 +59,32 @@ struct UserTopView: View {
     
     var body: some View {
         VStack {
-            VStack {
-                HStack {
-                    Text("Your top")
-                        .font(.largeTitle)
-                        .padding(.leading)
-                    
-                    Button("Artist"){
-                        withAnimation {
-                            if dataState != .artist {
-                                dataState = .artist
-                            }
+            HStack {
+                Text("Your top")
+                    .font(.largeTitle)
+                    .padding(.leading)
+                
+                Button("Artist"){
+                    withAnimation {
+                        if dataState != .artist {
+                            dataState = .artist
                         }
-                        print(dataState)
                     }
-                    .selectorButtonStyle(desiredState: .artist, currentState: dataState)
-                    
-                    Text("/")
-                        .font(.largeTitle)
-                    Button("Songs:"){
-                        withAnimation {
-                            if dataState != .songs {
-                                dataState = .songs
-                            }
-                        }
-                        print(dataState)
-                    }
-                    .selectorButtonStyle(desiredState: .songs, currentState: dataState)
+                    print(dataState)
                 }
-                .padding()
+                .selectorButtonStyle(desiredState: .artist, currentState: dataState)
+                
+                Text("/")
+                    .font(.largeTitle)
+                Button("Songs:"){
+                    withAnimation {
+                        if dataState != .songs {
+                            dataState = .songs
+                        }
+                    }
+                    print(dataState)
+                }
+                .selectorButtonStyle(desiredState: .songs, currentState: dataState)
                 
                 Picker("", selection: $range.animation(.easeIn)) {
                     ForEach(ranges, id: \.self) { range in
@@ -99,7 +96,7 @@ struct UserTopView: View {
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color.secondary.opacity(0.1))
+            .background(Color.primary.opacity(0.1))
             ScrollView() {
                 ZStack {
                     LazyVGrid(columns: gridItems) {
