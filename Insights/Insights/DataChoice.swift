@@ -10,3 +10,7 @@ import Foundation
 enum DataChoice {
     case artist, songs
 }
+
+enum ViewState {
+    case login, top, recommendations
+}

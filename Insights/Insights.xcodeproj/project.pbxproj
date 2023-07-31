@@ -27,7 +27,7 @@
 		D4D36CE12A713D3C00DB5016 /* ArtistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistView.swift; sourceTree = "<group>"; };
 		D4FF13FE2A6FC4AE00151567 /* Insights.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Insights.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4FF14012A6FC4AE00151567 /* InsightsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsApp.swift; sourceTree = "<group>"; };
-		D4FF14032A6FC4AE00151567 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D4FF14032A6FC4AE00151567 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
 		D4FF14052A6FC4AF00151567 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4FF14082A6FC4AF00151567 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D4FF140A2A6FC4AF00151567 /* Insights.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Insights.entitlements; sourceTree = "<group>"; };

@@ -16,6 +16,11 @@ struct ContentView: View {
     @State var logTxt = "Login"
     @State var logImage = "person.crop.circle.badge.checkmark"
     
+    let menus = [MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
+    
+
+    @State var viewState = ViewState.login
+    
     enum AuthenticationState  {
         case none, working, authenticated, error
     }
@@ -27,14 +32,21 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView() {
+            List(menus, selection: $viewState) { item in
+                Label(item.name, systemImage: item.image)
+            }
             
         } detail: {
             ZStack {
                 LoginView()
                     .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
                     .animation(.easeInOut, value: spotify.authenticationState)
-                UserTopView()
-                    .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                if viewState == .top {
+                    UserTopView(viewState: $viewState)
+                        .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                } else if viewState == .recommendations {
+                    
+                }
             }
         }
         .toolbar {
@@ -52,19 +64,21 @@ struct ContentView: View {
             }
         }
         .onOpenURL(perform: handleURL(_:))
+//        .onChange(of: viewState) { new in
+//            print(viewState)
+//        }
         
         .onChange(of: isAuthenticated) { state in
             print(state)
             if state == .authenticated {
                 spotify.authenticationState = .authenticated
                 setUserDetails()
-                spotify.viewState = .top
+                viewState = .top
             }
             else {
                 spotify.authenticationState = .error
             }
         }
-//            .toolbar(spotify.authenticationState == .authenticated ? .visible : .hidden, for: .windowToolbar)
     }
     
     func setUserDetails() {
@@ -120,6 +134,12 @@ struct User {
     var name: String {
         self.displayName == nil ? self.id : self.displayName!
     }
+}
+
+struct MenuItem: Identifiable, Hashable {
+    var id: ViewState
+    var name: String
+    var image: String
 }
 
 struct ContentView_Previews: PreviewProvider {

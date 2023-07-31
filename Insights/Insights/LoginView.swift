@@ -45,7 +45,7 @@ struct LoginView: View {
             .background(.green)
             .clipShape(Capsule())
             .padding(.top)
-            .scaleEffect(isHovering ? 1.2 : 1.0)
+            .scaleEffect(isHovering ? 1.05 : 1.0)
             .onHover { hovering in
                 withAnimation {
                     isHovering = hovering

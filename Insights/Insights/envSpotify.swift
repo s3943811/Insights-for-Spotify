@@ -11,10 +11,6 @@ import SpotifyWebAPI
 
 class envSpotify: ObservableObject {
     let redirectURL = URL(string: "insights://login-callback")
-    enum ViewState {
-        case login, top
-    }
-    @Published var viewState = ViewState.login
     
     enum AuthenticationState  {
         case none, working, authenticated, error
