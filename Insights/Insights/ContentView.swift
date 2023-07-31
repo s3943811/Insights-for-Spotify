@@ -16,6 +16,7 @@ struct ContentView: View {
     @State var logTxt = "Login"
     @State var logImage = "person.crop.circle.badge.checkmark"
     
+    
     let menus = [MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
     
 
@@ -28,12 +29,15 @@ struct ContentView: View {
     @State private var isAuthenticated = AuthenticationState.none
     
     @State var userDetail = User(id: "")
+    @State var trackAndArtist: TrackAndArtist = TrackAndArtist(tracks: [.time], artists: [.crumb])
 
     
     var body: some View {
         NavigationSplitView() {
-            List(menus, selection: $viewState) { item in
-                Label(item.name, systemImage: item.image)
+            if viewState != .login {
+                List(menus, selection: $viewState) { item in
+                    Label(item.name, systemImage: item.image)
+                }
             }
             
         } detail: {
@@ -45,7 +49,8 @@ struct ContentView: View {
                     UserTopView(viewState: $viewState)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 } else if viewState == .recommendations {
-                    
+                    RecommendationsView(trackAndArtist: $trackAndArtist)
+                        .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 }
             }
         }
@@ -72,11 +77,9 @@ struct ContentView: View {
             print(state)
             if state == .authenticated {
                 spotify.authenticationState = .authenticated
-                setUserDetails()
+//                setUserDetails()
+                getTop5()
                 viewState = .top
-            }
-            else {
-                spotify.authenticationState = .error
             }
         }
     }
@@ -97,6 +100,8 @@ struct ContentView: View {
     
     func logout() {
         spotify.api.authorizationManager.deauthorize()
+        isAuthenticated = .none
+        viewState = .login
     }
     
     func handleURL(_ url: URL) {
@@ -125,6 +130,31 @@ struct ContentView: View {
             }
         })
         .store(in: &spotify.cancellables)
+    }
+    
+    func getTop5() {
+        spotify.api.currentUserTopArtists(.mediumTerm, offset: 0, limit: 5)
+            .receive(on: RunLoop.main)
+            .sink(
+                receiveCompletion: { completion in
+                    print(completion)
+                },
+                receiveValue: { results in
+                    trackAndArtist.artists = results.items
+                }
+            )
+            .store(in: &spotify.cancellables)
+        spotify.api.currentUserTopTracks(.mediumTerm, offset: 0, limit: 5)
+                .receive(on: RunLoop.main)
+                .sink(
+                    receiveCompletion: { completion in
+                        print(completion)
+                    },
+                    receiveValue: { results in
+                        trackAndArtist.tracks = results.items
+                    }
+                )
+                .store(in: &spotify.cancellables)
     }
 }
 

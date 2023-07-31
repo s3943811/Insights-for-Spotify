@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SpotifyWebAPI
 
 enum DataChoice {
     case artist, songs
@@ -13,4 +14,9 @@ enum DataChoice {
 
 enum ViewState {
     case login, top, recommendations
+}
+
+struct TrackAndArtist {
+    var tracks: [Track]
+    var artists: [Artist]
 }
