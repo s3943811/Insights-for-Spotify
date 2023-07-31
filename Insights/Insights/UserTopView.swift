@@ -85,18 +85,14 @@ struct UserTopView: View {
                     print(dataState)
                 }
                 .selectorButtonStyle(desiredState: .songs, currentState: dataState)
-                
-                Picker("", selection: $range.animation(.easeIn)) {
-                    ForEach(ranges, id: \.self) { range in
-                        Text(range == .mediumTerm ? "Last 6 Months" : range == .shortTerm ? "Last 4 Weeks" : "All Time")
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(maxWidth: 300)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.primary.opacity(0.1))
+            Picker("", selection: $range.animation(.easeIn)) {
+                ForEach(ranges, id: \.self) { range in
+                    Text(range == .mediumTerm ? "Last 6 Months" : range == .shortTerm ? "Last 4 Weeks" : "All Time")
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .frame(maxWidth: 300)
             ScrollView() {
                 ZStack {
                     LazyVGrid(columns: gridItems) {
