@@ -11,9 +11,10 @@ import SpotifyWebAPI
 struct RecommendationsView: View {
     @Environment(\.openURL) var openURL
     @EnvironmentObject var spotify: envSpotify
+    @Binding var currentUser: SpotifyUser
     @State var recommendations = Set<Track>()
     @State var attributes = [TrackAttributes]()
-    @State var currentUser: SpotifyUser? = nil
+//    @State var currentUser: SpotifyUser? = nil
     @State var currPlaylist: Playlist<PlaylistItems>? = nil
     @Binding var trackAndArtist: TrackAndArtist
     
@@ -46,25 +47,12 @@ struct RecommendationsView: View {
             )
             .store(in: &spotify.cancellables)
     }
-    func getCurrentUser() {
-        spotify.api.currentUserProfile()
-            .sink(
-                receiveCompletion: { completion in
-                    print(completion)
-                },
-                receiveValue: { results in
-                    currentUser = results
-                }
-            )
-            .store(in: &spotify.cancellables)
-    }
     func createPlaylist() {
-        guard let currUserURI = currentUser?.uri else {return}
         let playlistDetails = PlaylistDetails(name: "Insights-Recommendation",
                                              isPublic: false,
                                              isCollaborative: false,
                                              description: "A playlist of recommendations from insights")
-        spotify.api.createPlaylist(for: currUserURI, playlistDetails)
+        spotify.api.createPlaylist(for: currentUser.uri, playlistDetails)
             .receive(on: RunLoop.main)
             .sink(
                 receiveCompletion: { completion in
@@ -131,7 +119,7 @@ struct RecommendationsView: View {
             
         }
         .onAppear {
-            getCurrentUser()
+//            getCurrentUser()
             var artistURIs = [String]()
             for item in trackAndArtist.artists {
                 artistURIs.append(item.uri!)
