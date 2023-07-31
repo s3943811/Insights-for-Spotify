@@ -56,7 +56,9 @@ class envSpotify: ObservableObject {
             scopes: [
                 .playlistModifyPrivate,
                 .playlistModifyPublic,
-                .userTopRead
+                .userTopRead,
+                .playlistReadPrivate,
+                .playlistReadCollaborative
             ]
         )!
         return authorizationURL
