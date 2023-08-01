@@ -30,7 +30,7 @@ struct ArtistView: View {
                     case .success(let image):
                         image.resizable()
                     case .failure(_):
-                        Image(systemName: "questionmark")
+                        Image(systemName: "music.mic")
                             .symbolVariant(.circle)
                             .font(.largeTitle)
                     default:

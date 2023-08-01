@@ -28,7 +28,7 @@ struct TrackView: View {
                     case .success(let image):
                         image.resizable()
                     case .failure(_):
-                        Image(systemName: "questionmark")
+                        Image(systemName: "music.quarternote.3")
                             .symbolVariant(.circle)
                             .font(.largeTitle)
                     default:
