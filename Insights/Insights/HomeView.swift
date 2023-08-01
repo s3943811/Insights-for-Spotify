@@ -14,6 +14,7 @@ struct HomeView: View {
     @Binding var currentUser: SpotifyUser
     @Binding var trackAndArtist: TrackAndArtist
     @Binding var viewState: ViewState
+    @Binding var dataState: DataChoice
     @State var playlists = [Playlist<PlaylistItemsReference>]()
     
     let gridItems: [GridItem] = [
@@ -85,6 +86,7 @@ struct HomeView: View {
                     .font(.title)
                 Spacer()
                 Button("View More") {
+                    dataState = .songs
                     viewState = .top
                 }
                 .buttonStyle(.borderless)
@@ -102,6 +104,7 @@ struct HomeView: View {
                     .font(.title)
                 Spacer()
                 Button("View More") {
+                    dataState = .artist
                     viewState = .top
                 }
                 .buttonStyle(.borderless)

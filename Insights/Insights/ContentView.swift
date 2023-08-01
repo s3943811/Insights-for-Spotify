@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var isAuthenticated = AuthenticationState.none
     @State var trackAndArtist: TrackAndArtist = TrackAndArtist(tracks: [.time], artists: [.crumb])
     @State var currentUser: SpotifyUser = .sampleCurrentUserProfile
+    @State var dataState: DataChoice = .artist
     
     let menus = [MenuItem(id: .home, name: "Home", image: "music.note.house.fill"), MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
     enum AuthenticationState  {
@@ -36,14 +37,14 @@ struct ContentView: View {
                     .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
                     .animation(.easeInOut, value: spotify.authenticationState)
                 if viewState == .top {
-                    UserTopView(viewState: $viewState)
+                    UserTopView(viewState: $viewState, dataState: $dataState)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 } else if viewState == .recommendations {
                     RecommendationsView(currentUser: $currentUser, trackAndArtist: $trackAndArtist)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 } else if viewState == .home {
-                    HomeView(currentUser: $currentUser, trackAndArtist: $trackAndArtist, viewState: $viewState)
-                    
+                    HomeView(currentUser: $currentUser, trackAndArtist: $trackAndArtist, viewState: $viewState, dataState: $dataState)
+                        .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 }
             }
         }

@@ -11,7 +11,7 @@ import SpotifyWebAPI
 struct UserTopView: View {
     @EnvironmentObject var spotify: envSpotify
     @Binding var viewState: ViewState
-    @State var dataState = DataChoice.artist
+    @Binding var dataState: DataChoice
     @State var range = TimeRange.mediumTerm
     @State var artists = [Artist]()
     @State var songs = [Track]()
