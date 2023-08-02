@@ -38,7 +38,7 @@ struct LoginView: View {
                     .padding(5)
                     .font(.title3)
             }
-            .disabled(spotify.authenticationState == .working ? true : false)
+//            .disabled(spotify.authenticationState == .working ? true : false)
             .buttonStyle(.plain)
             .foregroundColor(.white)
             .padding(5)

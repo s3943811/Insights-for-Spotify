@@ -17,6 +17,7 @@ struct ContentView: View {
     @State var trackAndArtist: TrackAndArtist = TrackAndArtist(tracks: [.time], artists: [.crumb])
     @State var currentUser: SpotifyUser = .sampleCurrentUserProfile
     @State var dataState: DataChoice = .artist
+    @State var searchState: SearchState = .none
     
     let menus = [MenuItem(id: .home, name: "Home", image: "music.note.house.fill"), MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
     enum AuthenticationState  {
@@ -36,15 +37,32 @@ struct ContentView: View {
                 LoginView()
                     .opacity(spotify.authenticationState != .authenticated ? 1 : 0)
                     .animation(.easeInOut, value: spotify.authenticationState)
-                if viewState == .top {
-                    UserTopView(viewState: $viewState, dataState: $dataState)
+                switch searchState {
+                case .error, .none:
+                    Text("Sorry, an error has occured - please check your internet connection then try again")
+                        .frame(maxHeight: .infinity)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-                } else if viewState == .recommendations {
-                    RecommendationsView(currentUser: $currentUser, trackAndArtist: $trackAndArtist)
+                    Button("Try again") {
+                        getCurrentUser()
+                        getTop5()
+                    }
+                    .offset(y:40)
+                    .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                case .searching:
+                    ProgressView()
+                        .frame(maxHeight: .infinity)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-                } else if viewState == .home {
-                    HomeView(currentUser: $currentUser, trackAndArtist: $trackAndArtist, viewState: $viewState, dataState: $dataState)
-                        .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                case .success:
+                    if viewState == .top {
+                        UserTopView(viewState: $viewState, dataState: $dataState)
+                            .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                    } else if viewState == .recommendations {
+                        RecommendationsView(currentUser: $currentUser, trackAndArtist: $trackAndArtist)
+                            .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                    } else if viewState == .home {
+                        HomeView(currentUser: $currentUser, trackAndArtist: $trackAndArtist, viewState: $viewState, dataState: $dataState)
+                            .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                    }
                 }
             }
         }
@@ -114,9 +132,17 @@ struct ContentView: View {
     }
     
     func getCurrentUser() {
+        searchState = .searching
         spotify.api.currentUserProfile()
             .sink(
                 receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        searchState = .success
+                    case .failure(let error):
+                        print(error)
+                        searchState = .error
+                    }
                     print(completion)
                 },
                 receiveValue: { results in
@@ -127,22 +153,36 @@ struct ContentView: View {
     }
     
     func getTop5() {
+        searchState = .searching
         spotify.api.currentUserTopArtists(.mediumTerm, offset: 0, limit: 5)
             .receive(on: RunLoop.main)
             .sink(
                 receiveCompletion: { completion in
-                    print(completion)
+                    switch completion {
+                    case .finished:
+                        searchState = .success
+                    case .failure(let error):
+                        print(error)
+                        searchState = .error
+                    }
                 },
                 receiveValue: { results in
                     trackAndArtist.artists = results.items
                 }
             )
             .store(in: &spotify.cancellables)
+        searchState = .searching
         spotify.api.currentUserTopTracks(.mediumTerm, offset: 0, limit: 5)
                 .receive(on: RunLoop.main)
                 .sink(
                     receiveCompletion: { completion in
-                        print(completion)
+                        switch completion {
+                        case .finished:
+                            searchState = .success
+                        case .failure(let error):
+                            print(error)
+                            searchState = .error
+                        }
                     },
                     receiveValue: { results in
                         trackAndArtist.tracks = results.items

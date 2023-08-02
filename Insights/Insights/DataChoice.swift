@@ -20,3 +20,7 @@ struct TrackAndArtist {
     var tracks: [Track]
     var artists: [Artist]
 }
+
+enum SearchState {
+    case none, searching, success, error
+}
