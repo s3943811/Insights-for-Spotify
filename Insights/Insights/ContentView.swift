@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 import SpotifyWebAPI
+import SpotifyExampleContent
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL

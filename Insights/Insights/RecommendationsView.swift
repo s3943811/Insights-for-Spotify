@@ -111,7 +111,8 @@ struct RecommendationsView: View {
             ScrollView() {
                 LazyVGrid(columns: gridItems) {
                     ForEach(Array(recommendations), id: \.self) { song in
-                        TrackView(song: song)
+                        let cardItem = CardItem(track: song)
+                        CardView(cardItem: cardItem)
                     }
                 }
                 .padding()

@@ -97,7 +97,8 @@ struct UserTopView: View {
                 ZStack {
                     LazyVGrid(columns: gridItems) {
                         ForEach(artists, id: \.self) { artist in
-                            ArtistView(artist: artist)
+                            let cardItem = CardItem(artist: artist)
+                            CardView(cardItem: cardItem)
                         }
                     }
                     .padding()
@@ -105,7 +106,8 @@ struct UserTopView: View {
                     
                     LazyVGrid(columns: gridItems) {
                         ForEach(songs, id: \.self) { song in
-                            TrackView(song: song)
+                            let cardItem = CardItem(track: song)
+                            CardView(cardItem: cardItem)
                         }
                     }
                     .padding()

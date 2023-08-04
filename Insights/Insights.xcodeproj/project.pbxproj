@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D40DE83E2A7293AF003A5BD1 /* DataChoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40DE83D2A7293AF003A5BD1 /* DataChoice.swift */; };
-		D40DE8402A72965C003A5BD1 /* TrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40DE83F2A72965C003A5BD1 /* TrackView.swift */; };
+		D40DE83E2A7293AF003A5BD1 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40DE83D2A7293AF003A5BD1 /* DataStructures.swift */; };
 		D436746B2A778AD800D8F49B /* RecommendationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436746A2A778AD800D8F49B /* RecommendationsView.swift */; };
 		D436746F2A77E05F00D8F49B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D436746E2A77E05F00D8F49B /* HomeView.swift */; };
-		D43674712A77EB1100D8F49B /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43674702A77EB1100D8F49B /* PlaylistView.swift */; };
+		D4D230992A7B727C0023A70B /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D230982A7B727C0023A70B /* CardView.swift */; };
 		D4D36CE02A712CA300DB5016 /* UserTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D36CDF2A712CA300DB5016 /* UserTopView.swift */; };
-		D4D36CE22A713D3C00DB5016 /* ArtistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D36CE12A713D3C00DB5016 /* ArtistView.swift */; };
 		D4FF14022A6FC4AE00151567 /* InsightsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FF14012A6FC4AE00151567 /* InsightsApp.swift */; };
 		D4FF14042A6FC4AE00151567 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FF14032A6FC4AE00151567 /* ContentView.swift */; };
 		D4FF14062A6FC4AF00151567 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4FF14052A6FC4AF00151567 /* Assets.xcassets */; };
@@ -24,13 +22,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D40DE83D2A7293AF003A5BD1 /* DataChoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataChoice.swift; sourceTree = "<group>"; };
-		D40DE83F2A72965C003A5BD1 /* TrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackView.swift; sourceTree = "<group>"; };
+		D40DE83D2A7293AF003A5BD1 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
 		D436746A2A778AD800D8F49B /* RecommendationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationsView.swift; sourceTree = "<group>"; };
 		D436746E2A77E05F00D8F49B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		D43674702A77EB1100D8F49B /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
+		D4D230982A7B727C0023A70B /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		D4D36CDF2A712CA300DB5016 /* UserTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTopView.swift; sourceTree = "<group>"; };
-		D4D36CE12A713D3C00DB5016 /* ArtistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistView.swift; sourceTree = "<group>"; };
 		D4FF13FE2A6FC4AE00151567 /* Insights.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Insights.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4FF14012A6FC4AE00151567 /* InsightsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsApp.swift; sourceTree = "<group>"; };
 		D4FF14032A6FC4AE00151567 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
@@ -73,15 +69,13 @@
 		D4FF14002A6FC4AE00151567 /* Insights */ = {
 			isa = PBXGroup;
 			children = (
-				D43674702A77EB1100D8F49B /* PlaylistView.swift */,
-				D4D36CE12A713D3C00DB5016 /* ArtistView.swift */,
 				D4D36CDF2A712CA300DB5016 /* UserTopView.swift */,
 				D436746A2A778AD800D8F49B /* RecommendationsView.swift */,
-				D40DE83F2A72965C003A5BD1 /* TrackView.swift */,
-				D40DE83D2A7293AF003A5BD1 /* DataChoice.swift */,
+				D40DE83D2A7293AF003A5BD1 /* DataStructures.swift */,
 				D4FF14102A6FC57C00151567 /* Info.plist */,
 				D4FF14012A6FC4AE00151567 /* InsightsApp.swift */,
 				D4FF14032A6FC4AE00151567 /* ContentView.swift */,
+				D4D230982A7B727C0023A70B /* CardView.swift */,
 				D436746E2A77E05F00D8F49B /* HomeView.swift */,
 				D4FF14182A6FD3D300151567 /* envSpotify.swift */,
 				D4FF14052A6FC4AF00151567 /* Assets.xcassets */,
@@ -176,16 +170,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D40DE83E2A7293AF003A5BD1 /* DataChoice.swift in Sources */,
+				D40DE83E2A7293AF003A5BD1 /* DataStructures.swift in Sources */,
 				D4FF14172A6FC86A00151567 /* LoginView.swift in Sources */,
-				D40DE8402A72965C003A5BD1 /* TrackView.swift in Sources */,
 				D436746F2A77E05F00D8F49B /* HomeView.swift in Sources */,
 				D4FF14042A6FC4AE00151567 /* ContentView.swift in Sources */,
-				D43674712A77EB1100D8F49B /* PlaylistView.swift in Sources */,
 				D4FF14022A6FC4AE00151567 /* InsightsApp.swift in Sources */,
 				D436746B2A778AD800D8F49B /* RecommendationsView.swift in Sources */,
 				D4D36CE02A712CA300DB5016 /* UserTopView.swift in Sources */,
-				D4D36CE22A713D3C00DB5016 /* ArtistView.swift in Sources */,
+				D4D230992A7B727C0023A70B /* CardView.swift in Sources */,
 				D4FF14192A6FD3D300151567 /* envSpotify.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

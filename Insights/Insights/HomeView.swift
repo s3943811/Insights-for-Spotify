@@ -77,7 +77,8 @@ struct HomeView: View {
             }
             LazyVGrid(columns: gridItems) {
                 ForEach(playlists, id: \.self) { playlist in
-                    PlaylistView(playlist: playlist)
+                    let cardItem = CardItem(playlist: playlist)
+                    CardView(cardItem: cardItem)
                 }
             }
             HStack {
@@ -95,7 +96,8 @@ struct HomeView: View {
             }
             LazyVGrid(columns: gridItems) {
                 ForEach(Array(trackAndArtist.tracks), id: \.self) { song in
-                    TrackView(song: song)
+                    let cardItem = CardItem(track: song)
+                    CardView(cardItem: cardItem)
                 }
             }
             HStack {
@@ -113,7 +115,8 @@ struct HomeView: View {
             }
             LazyVGrid(columns: gridItems) {
                 ForEach(Array(trackAndArtist.artists), id: \.self) { artist in
-                    ArtistView(artist: artist)
+                    let cardItem = CardItem(artist: artist)
+                    CardView(cardItem: cardItem)
                 }
             }
 

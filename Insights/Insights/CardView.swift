@@ -1,34 +1,30 @@
 //
-//  TrackView.swift
+//  CardView.swift
 //  Insights
 //
-//  Created by Maximus Dionyssopoulos on 27/7/2023.
+//  Created by Maximus Dionyssopoulos on 3/8/2023.
 //
 
 import SwiftUI
 import SpotifyWebAPI
-import SpotifyExampleContent
 
-struct TrackView: View {
+struct CardView: View {
     @Environment(\.openURL) var openURL
     
     @State private var isHovering = false
-    var song: Track
+    var cardItem: CardItem
+    
     var body: some View {
         Button {
-            print("Song: \(song.name)")
-            if let url = song.externalURLs?["spotify"] {
-                openURL(url)
-            }
+            print(cardItem.name)
         } label: {
             ZStack(alignment: .bottom) {
-                let image = song.album?.images?[1].url
-                AsyncImage(url: image) { phase in
+                AsyncImage(url: cardItem.imageURL) { phase in
                     switch phase {
                     case .success(let image):
                         image.resizable()
-                    case .failure(_):
-                        Image(systemName: "music.quarternote.3")
+                    case .failure(_), .empty:
+                        Image(systemName: cardItem.systemImage)
                             .symbolVariant(.circle)
                             .font(.largeTitle)
                     default:
@@ -39,13 +35,23 @@ struct TrackView: View {
                 .scaleEffect(isHovering ? 1.2 : 1.0)
                 
                 VStack {
-                    Text(song.name)
+                    Text(cardItem.name)
                         .lineLimit(2)
                         .font(.headline)
-                    ForEach(song.artists!, id: \.self) { artist in
-                        Text(artist.name)
-                            .lineLimit(2)
-                            .foregroundStyle(.secondary)
+                    if cardItem.typeofItem == .track {
+                        if let artists = cardItem.artists {
+                            ForEach(artists, id: \.self) { artist in
+                                Text(artist.name)
+                                    .lineLimit(2)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    } else if cardItem.typeofItem == .playlist {
+                        if let owner = cardItem.owner {
+                            Text("By: \(owner.id)")
+                                .lineLimit(1)
+                                .font(.headline)
+                        }
                     }
                 }
                 .padding(3)
@@ -62,12 +68,12 @@ struct TrackView: View {
                 isHovering = hovering
             }
         }
-
     }
 }
 
-struct TrackView_Previews: PreviewProvider {
+struct CardView_Previews: PreviewProvider {
+    static let cardItem = CardItem()
     static var previews: some View {
-        TrackView(song: .faces)
+        CardView(cardItem: cardItem)
     }
 }
