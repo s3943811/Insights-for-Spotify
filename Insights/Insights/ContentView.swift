@@ -20,7 +20,13 @@ struct ContentView: View {
     @State var dataState: DataChoice = .artist
     @State var searchState: SearchState = .none
     
-    let menus = [MenuItem(id: .home, name: "Home", image: "music.note.house.fill"), MenuItem(id: .top, name: "Top", image: "trophy.fill"), MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill")]
+    let menus = [MenuItem(id: .home, name: "Home", image: "music.note.house.fill"),
+                 MenuItem(id: .top, name: "Top", image: "trophy.fill",
+                          subItems: [MenuItem(id: .artist, name: "Artists", image: "music.mic", dataChoice: .artist),
+                                     MenuItem(id: .song, name: "Songs", image: "music.note", dataChoice: .songs),
+                          ]),
+                 MenuItem(id: .recommendations, name: "Recommendations", image: "wave.3.forward.circle.fill"),
+    ]
     enum AuthenticationState  {
         case none, working, authenticated, error
     }
@@ -28,7 +34,7 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView() {
             if viewState != .login {
-                List(menus, selection: $viewState) { item in
+                List(menus, children: \.subItems, selection: $viewState) { item in
                     Label(item.name, systemImage: item.image)
                 }
             }
@@ -54,17 +60,28 @@ struct ContentView: View {
                         .frame(maxHeight: .infinity)
                         .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
                 case .success:
-                    if viewState == .top {
+                    switch viewState {
+                    case .top, .artist, .song:
                         UserTopView(viewState: $viewState, dataState: $dataState)
                             .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-                    } else if viewState == .recommendations {
+                    case .recommendations:
                         RecommendationsView(currentUser: $currentUser, trackAndArtist: $trackAndArtist)
                             .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
-                    } else if viewState == .home {
+                    case .home:
                         HomeView(currentUser: $currentUser, trackAndArtist: $trackAndArtist, viewState: $viewState, dataState: $dataState)
                             .opacity(spotify.authenticationState == .authenticated ? 1 : 0)
+                    default:
+                        EmptyView()
                     }
                 }
+            }
+            .onChange(of: viewState) { _ in
+                if viewState == .artist {
+                    dataState = .artist
+                } else if viewState == .song {
+                    dataState = .songs
+                }
+                
             }
         }
         .toolbar {
@@ -197,6 +214,8 @@ struct MenuItem: Identifiable, Hashable {
     var id: ViewState
     var name: String
     var image: String
+    var subItems: [MenuItem]?
+    var dataChoice: DataChoice?
 }
 
 struct ContentView_Previews: PreviewProvider {

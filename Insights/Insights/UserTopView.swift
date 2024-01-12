@@ -115,7 +115,7 @@ struct UserTopView: View {
                 }
                 .onAppear() {
 //                    print(state)
-                    if viewState == .top {
+                    if viewState == .top || viewState == .artist || viewState == .song {
                         performSearch(time: range)
                     }
                 }
